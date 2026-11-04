@@ -6,6 +6,12 @@ on:
   schedule:
     - cron: 0 0 */3 * *
 
+# The repository's default token only reads, so creating the release got 403
+# on every run from 28/07 on.
+permissions:
+  contents: write   # create the release, delete the older ones and their tags
+  actions: write    # delete the old workflow runs
+
 jobs:
   run:
     runs-on: ubuntu-latest
@@ -29,7 +35,7 @@ jobs:
         cat hashes.md5
     
     - name: Upload to Releases
-      uses: softprops/action-gh-release@v1
+      uses: softprops/action-gh-release@v3
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
